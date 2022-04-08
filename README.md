@@ -1,9 +1,9 @@
-# OpenGL-Boiler-Plate
+# Instance Rendering
 
-* The main idea behind this repo is to have an easy way to write OpenGL code (for myself) and start new projects
-* Using this boiler plate system is fast, easy and takes care of all the required OpenGL initialization one would have to go
-  through and allows the user to jump straight into rendering, Yay!
-* The only thing you need to do per project is:
-    - change the width, height and name of the window in Context.h
-    - define any attributes / methods your program needs in App.h
-    - fill in App.cpp and render to your hearts desire
+This project is a showcase of how powerful instance rendering is compared to standard rendering.
+
+Without using instancing, you can render about 50,000 cubes before signficant performace losses occur.
+
+Using instancing, you can render the about 700,000 cubes before performance begins to fall behind, and even
+then its nothing crazy.
+

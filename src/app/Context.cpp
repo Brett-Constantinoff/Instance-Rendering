@@ -2,23 +2,27 @@
 #include <iostream>
 
 
+//function that starts your application
 void Context::start( void ){
     init();
     run();
     destroy();
 }
 
+//initializes the window and ImGui
 void Context::init( void ){
     initContext();
     initImGui();
 }
 
+//destroys any and all resources allocated for the app
 void Context::destroy( void ){
     destroyRes();
     destroyWindow();
     destroyImGui();
 }
 
+//inits GLFW and GLEW
 void Context::initContext( ){
      /* INIT GLFW */
     glfwInit();
@@ -31,7 +35,7 @@ void Context::initContext( ){
 #endif
 
     /* WINDOW INIT */
-    this->mID = glfwCreateWindow(this->mWidth, this->mHeight, this->mName, NULL, NULL);
+    mID = glfwCreateWindow(mWidth, mHeight, mName, NULL, NULL);
     if(!mID){
         std::cerr << "Error creating OpenGL window" << std::endl;
         exit(EXIT_FAILURE);
@@ -51,6 +55,7 @@ void Context::initContext( ){
     glEnable(GL_BLEND);
 }
 
+//inits ImGui
 void Context::initImGui( void ){
       /* IMGUI INIT */
     IMGUI_CHECKVERSION();
@@ -59,51 +64,80 @@ void Context::initImGui( void ){
 
     ImGui::StyleColorsDark();
 
-    ImGui_ImplGlfw_InitForOpenGL(this->mID, true);
+    ImGui_ImplGlfw_InitForOpenGL(mID, true);
     ImGui_ImplOpenGL3_Init("#version 150");
 }
 
+//start of frame, clear buffers and tell ImGui to start a new frame
+void Context::startFrame( void ){
+    //set the clear colour and clear the buffers
+    glClearColor(mColour.r, mColour.g, mColour.b, mColour.a);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    //setup imgui frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+}
+
+//main application loop
 void Context::run( void ){
     onStart();
-    while(!glfwWindowShouldClose(this->mID)){
+    while(!glfwWindowShouldClose(mID)){
+        startFrame();
         onUpdate();
         onRender();
+        endFrame();
     }
 }
 
+//render ImGui data and swap buffer / poll events
+void Context::endFrame( void ){
+
+    //swap front and back buffers and poll IO events(buttons presses, mouse movement etc)
+    glfwSwapBuffers(*getID());
+    glfwPollEvents();
+}
+
+//deallocate ImGui stuff
 void Context::destroyImGui( void ){
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
 
+//terminates the window
 void Context::destroyWindow( void ){
-    glfwDestroyWindow(this->mID);
+    glfwDestroyWindow(mID);
     glfwTerminate();
 }
 
+
+//destorys any programs / buffers used for the app
 void Context::destroyRes( void ){
-    for(auto vao: this->mVaos){
+    for(auto vao: mVaos){
         glDeleteVertexArrays(1, &vao);
     }
-    for(auto vbo: this->mVbos){
+    for(auto vbo: mVbos){
         glDeleteBuffers(1, &vbo);
     }
-    for(auto ibo: this->mIbos){
+    for(auto ibo: mIbos){
         glDeleteBuffers(1, &ibo);
     }
-    for(auto tbo: this->mTbos){
+    for(auto tbo: mTbos){
         glDeleteTextures(1, &tbo);
     }
-    for(auto program: this->mPrograms){
+    for(auto program: mPrograms){
         glDeleteProgram(program);
     }
 }
 
+//returns the context ID
 GLFWwindow** Context::getID( void ){
     return &mID;
 }
 
+//returns a projection matrix for perspective viewing
 const glm::mat4* Context::getPersepctiveView( void ){
     return &mPerspective; 
 }

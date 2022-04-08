@@ -3,9 +3,9 @@
 
 #define GL_SILENCE_DEPRECATION
 
-#include "libs/imgui.h"
-#include "libs/imgui_impl_glfw.h"
-#include "libs/imgui_impl_opengl3.h"
+#include "../libs/imgui.h"
+#include "../libs/imgui_impl_glfw.h"
+#include "../libs/imgui_impl_opengl3.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -22,7 +22,7 @@ class Context{
         //change these 3 attributes per project
         const int mWidth = 1280;
         const int mHeight = 720;
-        const char* mName = "Hello World";
+        const char* mName = "Instanced Rendering";
 
         const glm::vec4 mColour = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
         glm::mat4 mPerspective = glm::perspective(glm::radians(45.0f), (float)mWidth / (float)mHeight, 0.1f, 500.0f); 
@@ -44,6 +44,8 @@ class Context{
         const glm::mat4* getPersepctiveView( void );
 
     private:
+        void startFrame( void );
+        void endFrame( void );
         void destroyRes( void );
         void destroyImGui( void );
         void destroyWindow( void );
