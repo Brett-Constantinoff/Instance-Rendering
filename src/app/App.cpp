@@ -161,9 +161,8 @@ void App::onStart(){
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
-    //cube transformations, normals and colours
+    //cube transformations and colours
     mTransforms = new glm::mat4[MAX_CUBES];
-    mNormals = new glm::mat4[MAX_CUBES];
     mColours = new glm::vec3[MAX_CUBES];
     for (int i = 0; i < MAX_CUBES; i++){
         glm::vec3 colour = {RANDOM, RANDOM, RANDOM};
@@ -175,7 +174,6 @@ void App::onStart(){
      
         mColours[i] = colour;
         mTransforms[i] = transform;
-        mNormals[i] = normal;
     }
     uint32_t colourBuffer = Utils::genBuffer();
     mVbos.push_back(colourBuffer);
@@ -348,5 +346,5 @@ App::~App(){
     delete mCubeMapShader;
     delete mCamera;
     delete[] mTransforms;
-    delete[] mNormals;
+    delete[] mColours;
 }

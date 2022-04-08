@@ -43,7 +43,6 @@ class App : public Context{
         glm::mat4 mProjection;
         glm::mat4 mView;
         glm::mat4* mTransforms;
-        glm::mat4* mNormals;
 
         glm::vec3* mColours;
 
